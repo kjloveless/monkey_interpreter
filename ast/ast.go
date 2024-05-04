@@ -56,6 +56,12 @@ type BlockStatement struct {
     Statements  []Statement
 }
 
+ type CallExpression struct {
+     Token      token.Token     // The '(' token
+     Function   Expression      // Identifier of FunctionLiteral
+     Arguments  []Expression
+ }
+
 type PrefixExpression struct {
     Token       token.Token     // The prefix token, e.g. !
     Operator    string
@@ -101,6 +107,9 @@ func (rs *ReturnStatement) TokenLiteral() string    { return rs.Token.Literal }
 
 func (bs *BlockStatement) statementNode()           {}
 func (bs *BlockStatement) TokenLiteral() string     { return bs.Token.Literal }
+
+func (ce *CallExpression) expressionNode()          {}
+func (ce *CallExpression) TokenLiteral() string     { return ce.Token.Literal }
 
 func (pe *PrefixExpression) expressionNode()        {}
 func (pe *PrefixExpression) TokenLiteral() string   { return pe.Token.Literal }
@@ -192,6 +201,22 @@ func (es *ExpressionStatement) String() string {
     }
 
     return ""
+}
+
+func (ce *CallExpression) String() string {
+    var out bytes.Buffer
+
+    args := []string{}
+    for _, a := range ce.Arguments {
+        args = append(args, a.String())
+    }
+
+    out.WriteString(ce.Function.String())
+    out.WriteString("(")
+    out.WriteString(strings.Join(args, ", "))
+    out.WriteString(")")
+
+    return out.String()
 }
 
 func (pe *PrefixExpression) String() string {

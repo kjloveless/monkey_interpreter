@@ -87,6 +87,11 @@ type IntegerLiteral struct {
     Value int64
 }
 
+type StringLiteral struct {
+    Token token.Token
+    Value string
+}
+
 type FunctionLiteral struct {
     Token       token.Token // The 'fn' token
     Parameters  []*Identifier
@@ -129,6 +134,10 @@ func (il *IntegerLiteral) String() string           { return il.Token.Literal }
 
 func (fl *FunctionLiteral) expressionNode()         {}
 func (fl *FunctionLiteral) TokenLiteral() string    { return fl.Token.Literal }
+
+func (sl *StringLiteral) expressionNode()           {}
+func (sl *StringLiteral) TokenLiteral() string      { return sl.Token.Literal }
+func (sl *StringLiteral) String() string            { return sl.Token.Literal }
 
 func (p *Program) TokenLiteral() string {
     if len(p.Statements) > 0 {

@@ -109,6 +109,11 @@ type FunctionLiteral struct {
     Body        *BlockStatement
 }
 
+type HashLiteral struct {
+    Token   token.Token // the '{' token
+    Pairs   map[Expression]Expression
+}
+
 func (i *Identifier) expressionNode()       {}
 func (i *Identifier) TokenLiteral() string  { return i.Token.Literal }
 
@@ -167,6 +172,24 @@ func (sl *StringLiteral) String() string            { return sl.Token.Literal }
 
 func (al *ArrayLiteral) expressionNode()            {}
 func (al *ArrayLiteral) TokenLiteral() string       { return al.Token.Literal }
+
+func (hl *HashLiteral) expressionNode()             {}
+func (hl *HashLiteral) TokenLiteral() string        { return hl.Token.Literal }
+
+func (hl *HashLiteral) String() string              {
+    var out bytes.Buffer
+
+    pairs := []string{}
+    for key, value := range hl.Pairs {
+        pairs = append(pairs, key.String() + ":" + value.String())
+    }
+
+    out.WriteString("{")
+    out.WriteString(strings.Join(pairs, ", "))
+    out.WriteString("}")
+
+    return out.String()
+}
 
 func (al *ArrayLiteral) String() string             {
     var out bytes.Buffer
